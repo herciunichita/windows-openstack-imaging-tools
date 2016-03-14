@@ -841,7 +841,7 @@ function New-WindowsCloudImage()
                 "PersistDriverInstall"=$PersistDriverInstall;
             }
 
-            GenerateUnattendXml $UnattendXmlPath $unattedXmlPath $image $ProductKey $AdministratorPassword
+            GenerateUnattendXml -inUnattendXmlPath $UnattendXmlPath -outUnattendXmlPath $unattedXmlPath -image $image -ProductKey $productKey -AdministratorPassword $administratorPassword
             CopyUnattendResources $resourcesDir $image.ImageInstallationType $InstallMaaSHooks
             GenerateConfigFile $resourcesDir $configValues
             DownloadCloudbaseInit $resourcesDir ([string]$image.ImageArchitecture)
