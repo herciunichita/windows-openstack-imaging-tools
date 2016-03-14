@@ -65,6 +65,15 @@ function Run-Defragment {
     }
 }
 
+function Release-IP {
+    $HOST.UI.RawUI.WindowTitle = "Releasing IP..."
+    ipconfig.exe /release
+    if ($LASTEXITCODE)
+    {
+        throw "IPconfig release failed"
+    }
+}
+
 try
 {
     Import-Module "$resourcesDir\ini.psm1"
@@ -126,6 +135,8 @@ try
 
     Clean-UpdateResources
     
+    Release-IP
+
     $Host.UI.RawUI.WindowTitle = "Running Sysprep..."
     $unattendedXmlPath = "$programFilesDir\Cloudbase Solutions\Cloudbase-Init\conf\Unattend.xml"
     Set-PersistDrivers -Path $unattendedXmlPath -Persist:$persistDrivers
