@@ -266,14 +266,14 @@ function CopyUnattendResources
         del -Force "$resourcesDir\Wallpaper.png"
         del -Force "$resourcesDir\GPO.zip"
     }
-    if ($InstallMaaSHooks){
+    if ($InstallMaaSHooks) {
         $src = Join-Path $localResourcesDir "windows-curtin-hooks\curtin"
-        if ((Test-Path $src)){
-            $dst = split-path $resourcesDir
+        if ((Test-Path $src)) {
+            $dst = Split-Path $resourcesDir
             Copy-Item -Recurse $src $dst
+        } else {
+            throw "ERROR: The windows-curtin-hooks module is not installed. Please execute git submodule update --init" 
         }
-        else
-        { throw "ERROR: The windows-curtin-hooks module is not installed. Please execute git submodule update --init" }
     }
 }
 
