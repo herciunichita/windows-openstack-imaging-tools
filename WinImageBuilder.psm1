@@ -267,11 +267,13 @@ function CopyUnattendResources
         del -Force "$resourcesDir\GPO.zip"
     }
     if ($InstallMaaSHooks){
-        $src = Join-Path $localResourcesDir "curtin"
+        $src = Join-Path $localResourcesDir "windows-curtin-hooks\curtin"
         if ((Test-Path $src)){
             $dst = split-path $resourcesDir
-            copy -Recurse $src $dst
+            Copy-Item -Recurse $src $dst
         }
+        else
+        { throw "ERROR: The windows-curtin-hooks module is not installed. Please execute git submodule update --init" }
     }
 }
 
@@ -892,3 +894,4 @@ function New-WindowsCloudImage()
 }
 
 Export-ModuleMember New-WindowsCloudImage, Get-WimFileImagesInfo, New-MaaSImage
+
