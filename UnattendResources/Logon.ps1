@@ -86,9 +86,11 @@ function Install-WindowsUpdates {
    $excludedUpdates = $KBIdsBlacklist[$OSKernelVersion]
 
    $updates = Get-WindowsUpdate -Verbose -ExcludeKBId $KBIdsBlacklist
+   $maximumUpdates = 20
+   $rebootRequired = $updates.Count -gt $maximumUpdates
    if ($updates) {
-       Install-WindowsUpdate -Updates $updates
-       if (Get-RebootRequired) {
+       Install-WindowsUpdate -Updates $updates[0..$maximumUpdates]
+       if ($rebootRequired -or (Get-RebootRequired)) {
            Restart-Computer -Force
        }
    }
