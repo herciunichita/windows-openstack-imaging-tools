@@ -75,25 +75,28 @@ function Release-IP {
 }
 
 function Install-WindowsUpdates {
-   Import-Module "$resourcesDir\WindowsUpdates\WindowsUpdates"
-   $BaseOSKernelVersion = [System.Environment]::OSVersion.Version
-   $OSKernelVersion = ($BaseOSKernelVersion.Major.ToString() + "." + $BaseOSKernelVersion.Minor.ToString())
-   $KBIdsBlacklist = @{
-       "6.1" = @("KB2808679", "KB2894844", "KB3019978");
-       "6.2" = @("KB3013538", "KB3042058")
-       "6.3" = @("KB3013538", "KB3042058")
-   }
-   $excludedUpdates = $KBIdsBlacklist[$OSKernelVersion]
+    Import-Module "$resourcesDir\WindowsUpdates\WindowsUpdates"
+    $BaseOSKernelVersion = [System.Environment]::OSVersion.Version
+    $OSKernelVersion = ($BaseOSKernelVersion.Major.ToString() + "." + $BaseOSKernelVersion.Minor.ToString())
+    $KBIdsBlacklist = @{
+        "6.1" = @("KB2808679", "KB2894844", "KB3019978");
+        "6.2" = @("KB3013538", "KB3042058")
+        "6.3" = @("KB3013538", "KB3042058")
+    }
+    $excludedUpdates = $KBIdsBlacklist[$OSKernelVersion]
 
-   $updates = Get-WindowsUpdate -Verbose -ExcludeKBId $KBIdsBlacklist
-   $maximumUpdates = 20
-   $rebootRequired = $updates.Count -gt $maximumUpdates
-   if ($updates) {
-       Install-WindowsUpdate -Updates $updates[0..$maximumUpdates]
-       if ($rebootRequired -or (Get-RebootRequired)) {
-           Restart-Computer -Force
-       }
-   }
+    $updates = Get-WindowsUpdate -Verbose -ExcludeKBId $KBIdsBlacklist
+    $maximumUpdates = 20
+    $rebootRequired = ([int]$updates.Count) -gt $maximumUpdates
+    if (!$updates.Count) {
+        $updates = [array]$updates
+    }
+    if ($updates) {
+        Install-WindowsUpdate -Updates $updates[0..$maximumUpdates]
+        if ($rebootRequired -or (Get-RebootRequired)) {
+            Restart-Computer -Force
+        }
+    }
 }
 
 try
