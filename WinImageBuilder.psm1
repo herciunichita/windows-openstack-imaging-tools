@@ -543,7 +543,9 @@ function Shrink-VHDImage {
     Write-Host "New partition size: $NewSize Bytes"
 
     if ($NewSize -gt $MinSize) {
-        Resize-Partition -DriveLetter $Drive -Size ($NewSize) -ErrorAction "Stop"
+        ExecRetry {
+            Resize-Partition -DriveLetter $Drive -Size ($NewSize) -ErrorAction "Stop"
+        }
     }
     Dismount-VHD -Path $VirtualDiskPath
 
@@ -822,9 +824,8 @@ function New-WindowsOnlineImage {
                     -Generation $generation
             }
 
-            ExecRetry {
-                Shrink-VHDImage $VirtualDiskPath
-            }
+
+            Shrink-VHDImage $VirtualDiskPath
 
             if ($Type -eq "MAAS") {
                 $RawImagePath = $barePath + ".img"
