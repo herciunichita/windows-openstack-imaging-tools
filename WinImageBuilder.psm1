@@ -693,7 +693,9 @@ function New-MaaSImage()
         [parameter(Mandatory=$false)]
         [string]$SwitchName,
         [parameter(Mandatory=$false)]
-        [switch]$Force=$false
+        [switch]$Force=$false,
+        [parameter(Mandatory=$false)]
+        [switch]$PurgeUpdates
     )
     PROCESS
     {
@@ -702,7 +704,7 @@ function New-MaaSImage()
             -ProductKey $ProductKey -VirtIOISOPath $VirtIOISOPath -InstallUpdates:$InstallUpdates `
             -AdministratorPassword $AdministratorPassword -PersistDriverInstall:$PersistDriverInstall `
             -ExtraDriversPath $ExtraDriversPath -Memory $Memory -CpuCores $CpuCores `
-            -RunSysprep:$RunSysprep -SwitchName $SwitchName -Force:$Force
+            -RunSysprep:$RunSysprep -SwitchName $SwitchName -Force:$Force -PurgeUpdates:$PurgeUpdates
     }
 }
 
@@ -744,7 +746,9 @@ function New-WindowsOnlineImage {
         [parameter(Mandatory=$false)]
         [switch]$Force=$false,
         [ValidateSet("MAAS", "KVM", "HYPER-V", ignorecase=$false)]
-        [string]$Type = "MAAS"
+        [string]$Type = "MAAS",
+        [parameter(Mandatory=$false)]
+        [switch]$PurgeUpdates
     )
     PROCESS
     {
@@ -800,7 +804,7 @@ function New-WindowsOnlineImage {
                 -VirtIOISOPath $VirtIOISOPath -InstallUpdates:$InstallUpdates `
                 -AdministratorPassword $AdministratorPassword -PersistDriverInstall:$PersistDriverInstall `
                 -InstallMaaSHooks:$InstallMaaSHooks -ExtraFeatures $ExtraFeatures -ExtraDriversPath $ExtraDriversPath `
-                -DiskLayout $DiskLayout
+                -DiskLayout $DiskLayout -PurgeUpdates:$PurgeUpdates
 
             if ($RunSysprep){
                 if($DiskLayout -eq "UEFI")
@@ -879,7 +883,9 @@ function New-WindowsCloudImage()
         [parameter(Mandatory=$false)]
         [switch]$InstallMaaSHooks,
         [parameter(Mandatory=$false)]
-        [string]$VirtIOBasePath
+        [string]$VirtIOBasePath,
+        [parameter(Mandatory=$false)]
+        [switch]$PurgeUpdates
 
     )
     PROCESS
@@ -912,6 +918,7 @@ function New-WindowsCloudImage()
             $configValues = @{
                 "InstallUpdates"=$InstallUpdates;
                 "PersistDriverInstall"=$PersistDriverInstall;
+                "PurgeUpdates"=$PurgeUpdates;
             }
 
             GenerateUnattendXml -inUnattendXmlPath $UnattendXmlPath -outUnattendXmlPath $unattedXmlPath -image $image -ProductKey $productKey -AdministratorPassword $administratorPassword
