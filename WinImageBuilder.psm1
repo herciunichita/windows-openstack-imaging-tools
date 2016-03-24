@@ -821,7 +821,9 @@ function New-WindowsOnlineImage {
                     -Generation $generation
             }
 
-            Shrink-VHDImage $VirtualDiskPath
+            ExecRetry {
+                Shrink-VHDImage $VirtualDiskPath
+            }
 
             if ($Type -eq "MAAS") {
                 $RawImagePath = $barePath + ".img"
@@ -966,5 +968,5 @@ function New-WindowsCloudImage()
 }
 
 Export-ModuleMember New-WindowsCloudImage, Get-WimFileImagesInfo, New-MaaSImage,
-    New-WindowsOnlineImage
+    New-WindowsOnlineImage, Shrink-VHDImage
 
