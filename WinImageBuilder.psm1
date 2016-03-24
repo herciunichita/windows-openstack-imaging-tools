@@ -543,7 +543,7 @@ function Shrink-VHDImage {
     Write-Host "New partition size: $NewSize Bytes"
 
     if ($NewSize -gt $MinSize) {
-        Resize-Partition -DriveLetter $Drive -Size ($NewSize)
+        Resize-Partition -DriveLetter $Drive -Size ($NewSize) -ErrorAction "Stop"
     }
     Dismount-VHD -Path $VirtualDiskPath
 
