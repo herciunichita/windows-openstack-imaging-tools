@@ -94,15 +94,14 @@ function Install-WindowsUpdates {
 
     $updates = Get-WindowsUpdate -Verbose -ExcludeKBId $KBIdsBlacklist
     $maximumUpdates = 20
-    $rebootRequired = ([int]$updates.Count) -gt $maximumUpdates
     if (!$updates.Count) {
         $updates = [array]$updates
     }
     if ($updates) {
+        $availableUpdatesNumber = $updates.Count
+        Write-Host "Found $availableUpdatesNumber updates. Installing..."
         Install-WindowsUpdate -Updates $updates[0..$maximumUpdates]
-        if ($rebootRequired -or (Get-RebootRequired)) {
-            Restart-Computer -Force
-        }
+        Restart-Computer -Force
     }
 }
 
