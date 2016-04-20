@@ -135,6 +135,9 @@ try
 
     $Host.UI.RawUI.WindowTitle = "Running SetSetupComplete..."
     & "$programFilesDir\Cloudbase Solutions\Cloudbase-Init\bin\SetSetupComplete.cmd"
+    
+    iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
+    choco install git
 
     Run-Defragment
 
