@@ -100,7 +100,7 @@ function Install-WindowsUpdates {
     if ($updates) {
         $availableUpdatesNumber = $updates.Count
         Write-Host "Found $availableUpdatesNumber updates. Installing..."
-        $updates | Out-File -Append -FilePath "C:\updates_log.txt"
+        $updates.Title | Out-File -Append -FilePath "C:\updates_log.txt"
         Install-WindowsUpdate -Updates $updates[0..$maximumUpdates]
         Restart-Computer -Force
     }
@@ -146,7 +146,7 @@ try
     $Host.UI.RawUI.WindowTitle = "Running Sysprep..."
     $unattendedXmlPath = "$programFilesDir\Cloudbase Solutions\Cloudbase-Init\conf\Unattend.xml"
     Set-PersistDrivers -Path $unattendedXmlPath -Persist:$persistDrivers
-    & "$ENV:SystemRoot\System32\Sysprep\Sysprep.exe" `/generalize `/oobe `/unattend:"$unattendedXmlPath"
+    #& "$ENV:SystemRoot\System32\Sysprep\Sysprep.exe" `/generalize `/oobe `/unattend:"$unattendedXmlPath"
 }
 catch
 {
