@@ -146,7 +146,7 @@ try
     $Host.UI.RawUI.WindowTitle = "Running Sysprep..."
     $unattendedXmlPath = "$programFilesDir\Cloudbase Solutions\Cloudbase-Init\conf\Unattend.xml"
     Set-PersistDrivers -Path $unattendedXmlPath -Persist:$persistDrivers
-    #& "$ENV:SystemRoot\System32\Sysprep\Sysprep.exe" `/generalize `/oobe `/unattend:"$unattendedXmlPath"
+    & "$ENV:SystemRoot\System32\Sysprep\Sysprep.exe" `/generalize `/shutdown `/oobe `/unattend:"$unattendedXmlPath"
 }
 catch
 {
