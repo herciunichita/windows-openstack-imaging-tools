@@ -74,6 +74,8 @@ The Windows host where you plan to create the instance needs either:
 
 E.g. to generate a Windows Server 2012 R2 image, you need a host running either Windows Server 2012 R2 / Hyper-V Server 2012 R2 or Windows 8.1.
 
+If you want to disable the swap space you can add the `-DisableSwap:$true` parameter when creating the image.
+
 
 Generate MaaS compatible image
 ==============================

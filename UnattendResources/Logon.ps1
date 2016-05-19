@@ -106,12 +106,22 @@ function Install-WindowsUpdates {
     }
 }
 
+function Disable-Swap {
+    $swapRegkey = "HKLM:\\System\CurrentControlSet\Control\Session Manager\Memory Management"
+    Set-ItemProperty -Path $swapRegkey -Name "PagingFiles" -Value "C:\pagefile.sys 0 0"
+}
+
 try
 {
     Import-Module "$resourcesDir\ini.psm1"
     $installUpdates = Get-IniFileValue -Path $configIniPath -Section "DEFAULT" -Key "InstallUpdates" -Default $false -AsBoolean
     $persistDrivers = Get-IniFileValue -Path $configIniPath -Section "DEFAULT" -Key "PersistDriverInstall" -Default $true -AsBoolean
     $purgeUpdates = Get-IniFileValue -Path $configIniPath -Section "DEFAULT" -Key "PurgeUpdates" -Default $false -AsBoolean
+    $disableSwap = Get-IniFileValue -Path $configIniPath -Section "DEFAULT" -Key "DisableSwap" -Default $false -AsBoolean
+
+    if ($disableSwap) {
+        Disable-Swap
+    }
 
     if ($installUpdates) {
         Install-WindowsUpdates
@@ -120,7 +130,7 @@ try
     Clean-WindowsUpdates -PurgeUpdates $purgeUpdates
 
     $Host.UI.RawUI.WindowTitle = "Installing Cloudbase-Init..."
-    
+
     $programFilesDir = $ENV:ProgramFiles
 
     $CloudbaseInitMsiPath = "$resourcesDir\CloudbaseInit.msi"
