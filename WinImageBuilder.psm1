@@ -27,7 +27,7 @@ function ExecRetry($command, $maxRetryCount=4, $retryInterval=4)
 {
     $currErrorActionPreference = $ErrorActionPreference
     $ErrorActionPreference = "Continue"
-  
+
     $retryCount = 0
     while ($true)
     {
@@ -54,7 +54,7 @@ function ExecRetry($command, $maxRetryCount=4, $retryInterval=4)
             }
         }
     }
-} 
+}
 
 function CheckIsAdmin()
 {
@@ -257,7 +257,7 @@ function CopyUnattendResources
     $drives = Get-PSDrive
 
     if(!(Test-Path "$resourcesDir")) { $d = mkdir "$resourcesDir" }
-	Write-Output "copying: $localResourcesDir $resourcesDir"
+    Write-Output "copying: $localResourcesDir $resourcesDir"
     copy -Recurse "$localResourcesDir\*" $resourcesDir
 
     if ($imageInstallationType -eq "Server Core")
@@ -272,7 +272,7 @@ function CopyUnattendResources
             $dst = Split-Path $resourcesDir
             Copy-Item -Recurse $src $dst
         } else {
-            throw "ERROR: The windows-curtin-hooks module is not installed. Please execute git submodule update --init" 
+            throw "ERROR: The windows-curtin-hooks module is not installed. Please execute git submodule update --init"
         }
     }
 }
@@ -699,7 +699,9 @@ function New-MaaSImage()
         [parameter(Mandatory=$false)]
         [switch]$Force=$false,
         [parameter(Mandatory=$false)]
-        [switch]$PurgeUpdates
+        [switch]$PurgeUpdates,
+        [parameter(Mandatory=$false)]
+        [switch]$DisableSwap
     )
     PROCESS
     {
@@ -708,7 +710,8 @@ function New-MaaSImage()
             -ProductKey $ProductKey -VirtIOISOPath $VirtIOISOPath -InstallUpdates:$InstallUpdates `
             -AdministratorPassword $AdministratorPassword -PersistDriverInstall:$PersistDriverInstall `
             -ExtraDriversPath $ExtraDriversPath -Memory $Memory -CpuCores $CpuCores `
-            -RunSysprep:$RunSysprep -SwitchName $SwitchName -Force:$Force -PurgeUpdates:$PurgeUpdates
+            -RunSysprep:$RunSysprep -SwitchName $SwitchName -Force:$Force -PurgeUpdates:$PurgeUpdates `
+            -DisableSwap:$DisableSwap
     }
 }
 
@@ -752,7 +755,9 @@ function New-WindowsOnlineImage {
         [ValidateSet("MAAS", "KVM", "HYPER-V", ignorecase=$false)]
         [string]$Type = "MAAS",
         [parameter(Mandatory=$false)]
-        [switch]$PurgeUpdates
+        [switch]$PurgeUpdates,
+        [parameter(Mandatory=$false)]
+        [switch]$DisableSwap
     )
     PROCESS
     {
@@ -871,9 +876,9 @@ function New-WindowsCloudImage()
         [string]$DiskLayout = "BIOS",
         [parameter(Mandatory=$false)]
         [string]$VirtIOISOPath,
-		[parameter(Mandatory=$false)]
+        [parameter(Mandatory=$false)]
         [array]$ExtraFeatures = @("Microsoft-Hyper-V"),
-		[parameter(Mandatory=$false)]
+        [parameter(Mandatory=$false)]
         [string]$ExtraDriversPath,
         [parameter(Mandatory=$false)]
         [switch]$InstallUpdates,
@@ -888,7 +893,9 @@ function New-WindowsCloudImage()
         [parameter(Mandatory=$false)]
         [string]$VirtIOBasePath,
         [parameter(Mandatory=$false)]
-        [switch]$PurgeUpdates
+        [switch]$PurgeUpdates,
+        [parameter(Mandatory=$false)]
+        [switch]$DisableSwap
 
     )
     PROCESS
@@ -922,6 +929,7 @@ function New-WindowsCloudImage()
                 "InstallUpdates"=$InstallUpdates;
                 "PersistDriverInstall"=$PersistDriverInstall;
                 "PurgeUpdates"=$PurgeUpdates;
+                "DisableSwap" =$DisableSwap;
             }
 
             GenerateUnattendXml -inUnattendXmlPath $UnattendXmlPath -outUnattendXmlPath $unattedXmlPath -image $image -ProductKey $productKey -AdministratorPassword $administratorPassword
@@ -939,11 +947,11 @@ function New-WindowsCloudImage()
             #{
             #    SetProductKeyInImage $winImagePath $ProductKey
             #}
-			if ($ExtraDriversPath){
-				if ((Test-Path $ExtraDriversPath)){
-					AddDriversToImage $winImagePath $ExtraDriversPath
-				}
-			}
+            if ($ExtraDriversPath){
+                if ((Test-Path $ExtraDriversPath)){
+                    AddDriversToImage $winImagePath $ExtraDriversPath
+                }
+            }
 
             if($VirtIOISOPath)
             {
@@ -953,10 +961,10 @@ function New-WindowsCloudImage()
             {
                 Add-VirtIODrivers $winImagePath $image $VirtIOBasePath
             }
-			#& Dism.exe /image:${winImagePath} /Get-Feature
-			if ($ExtraFeatures){
-				EnableFeaturesInImage $winImagePath $ExtraFeatures
-			}
+            #& Dism.exe /image:${winImagePath} /Get-Feature
+            if ($ExtraFeatures){
+                EnableFeaturesInImage $winImagePath $ExtraFeatures
+            }
         }
         finally
         {
