@@ -121,9 +121,13 @@ try
 
 
     iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
-    choco install git
-    choco install python
-    \$env:Path += ';C:\Program Files\Git\bin'; setx PATH \$env:Path
+    choco install --confirm git
+    RefreshEnv.cmd
+    choco install --confirm python -version 2.7.6
+    RefreshEnv.cmd
+    choco install --confirm pip
+    RefreshEnv.cmd
+    \$env:Path += '';C:\Python27;C:\Python27\Scripts;C:\OpenSSL-Win32\bin;C:\Program Files (x86)\Git\cmd;C:\Program Files\Git\bin;C:\qemu-img'; setx PATH \$env:Path
 
     pushd C:\
     mkdir OpenStack
