@@ -119,6 +119,18 @@ try
     $purgeUpdates = Get-IniFileValue -Path $configIniPath -Section "DEFAULT" -Key "PurgeUpdates" -Default $false -AsBoolean
     $disableSwap = Get-IniFileValue -Path $configIniPath -Section "DEFAULT" -Key "DisableSwap" -Default $false -AsBoolean
 
+
+    iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
+    choco install git
+    choco install python
+    \$env:Path += ';C:\Program Files\Git\bin'; setx PATH \$env:Path
+
+    pushd C:\
+    mkdir OpenStack
+    mkdir OpenStack\Log
+    mkdir iSCSIVirtualDisks
+    popd
+
     if ($disableSwap) {
         Disable-Swap
     }
@@ -147,8 +159,6 @@ try
     $Host.UI.RawUI.WindowTitle = "Running SetSetupComplete..."
     & "$programFilesDir\Cloudbase Solutions\Cloudbase-Init\bin\SetSetupComplete.cmd"
     
-    iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
-    choco install git
 
     Run-Defragment
 
