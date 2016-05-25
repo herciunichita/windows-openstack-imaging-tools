@@ -130,9 +130,16 @@ try
     \$env:Path += ';C:\Python27;C:\Python27\Scripts;C:\OpenSSL-Win32\bin;C:\Program Files (x86)\Git\cmd;C:\Program Files\Git\bin;C:\qemu-img'; setx PATH \$env:Path
 
     pushd C:\
+    if ( -not (Test-Path C:\Openstack)){
     mkdir OpenStack
+    }
+    if ( -not (Test-Path C:\Openstack\Log)){
     mkdir OpenStack\Log
+    }
+    if ( -not (Test-Path C:\iSCSIVirtualDisks)){
     mkdir iSCSIVirtualDisks
+    }
+
     popd
 
     if ($disableSwap) {
