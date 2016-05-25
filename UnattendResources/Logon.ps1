@@ -127,7 +127,7 @@ try
     RefreshEnv.cmd
     choco install --confirm pip
     RefreshEnv.cmd
-    \$env:Path += '';C:\Python27;C:\Python27\Scripts;C:\OpenSSL-Win32\bin;C:\Program Files (x86)\Git\cmd;C:\Program Files\Git\bin;C:\qemu-img'; setx PATH \$env:Path
+    \$env:Path += ';C:\Python27;C:\Python27\Scripts;C:\OpenSSL-Win32\bin;C:\Program Files (x86)\Git\cmd;C:\Program Files\Git\bin;C:\qemu-img'; setx PATH \$env:Path
 
     pushd C:\
     mkdir OpenStack
