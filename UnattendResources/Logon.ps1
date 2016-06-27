@@ -161,11 +161,11 @@ try
     }
 
     iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
-    #choco install --confirm git
+    choco install --confirm git
     RefreshEnv.cmd
-    #choco install --confirm python -version 2.7.6
+    choco install --confirm python -version 2.7.6
     RefreshEnv.cmd
-    #choco install --confirm pip
+    choco install --confirm pip
     RefreshEnv.cmd
 
     $Host.UI.RawUI.WindowTitle = "Running SetSetupComplete..."
