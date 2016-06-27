@@ -120,13 +120,6 @@ try
     $disableSwap = Get-IniFileValue -Path $configIniPath -Section "DEFAULT" -Key "DisableSwap" -Default $false -AsBoolean
 
 
-    iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
-    #choco install --confirm git
-    RefreshEnv.cmd
-    #choco install --confirm python -version 2.7.6
-    RefreshEnv.cmd
-    #choco install --confirm pip
-    RefreshEnv.cmd
     #\$env:Path += ';C:\Python27;C:\Python27\Scripts;C:\OpenSSL-Win32\bin;C:\Program Files (x86)\Git\cmd;C:\Program Files\Git\bin;C:\qemu-img'; setx PATH \$env:Path
 
     pushd C:\
@@ -166,6 +159,14 @@ try
     {
         throw "Installing $CloudbaseInitMsiPath failed. Log: $CloudbaseInitMsiLog"
     }
+
+    iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
+    #choco install --confirm git
+    RefreshEnv.cmd
+    #choco install --confirm python -version 2.7.6
+    RefreshEnv.cmd
+    #choco install --confirm pip
+    RefreshEnv.cmd
 
     $Host.UI.RawUI.WindowTitle = "Running SetSetupComplete..."
     & "$programFilesDir\Cloudbase Solutions\Cloudbase-Init\bin\SetSetupComplete.cmd"
