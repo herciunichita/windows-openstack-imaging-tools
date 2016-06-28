@@ -168,6 +168,8 @@ try
     choco install --confirm pip
     RefreshEnv.cmd
 
+    $env:Path += ';C:\Python27;C:\Python27\Scripts;C:\OpenSSL-Win32\bin;C:\Program Files (x86)\Git\cmd;C:\Program Files\Git\bin;C:\qemu-img'; setx PATH \$env:Path
+
     $Host.UI.RawUI.WindowTitle = "Running SetSetupComplete..."
     & "$programFilesDir\Cloudbase Solutions\Cloudbase-Init\bin\SetSetupComplete.cmd"
     
