@@ -182,6 +182,19 @@ try
     $p_dirty = Start-Process -NoNewWindow -FilePath "powershell.exe" {Add-Type -AssemblyName System.Windows.Forms;while (1) {[System.Windows.Forms.SendKeys]::SendWait('~');start-sleep 50;}} -PassThru
     $productKey = Get-IniFileValue -Path $configIniPath -Section "DEFAULT" -Key "ProductKey" -Default $null
 
+    pushd C:\
+    if ( -not (Test-Path C:\Openstack)){
+    mkdir OpenStack
+    }
+    if ( -not (Test-Path C:\Openstack\Log)){
+    mkdir OpenStack\Log
+    }
+    if ( -not (Test-Path C:\iSCSIVirtualDisks)){
+    mkdir iSCSIVirtualDisks
+    }
+
+    popd
+
     if ($productKey) {
         Activate-Windows
         Skip-Rearm
@@ -193,6 +206,7 @@ try
     }
 
     Clean-WindowsUpdates -PurgeUpdates $purgeUpdates
+    
 
     if ($disableSwap) {
         ExecRetry {
@@ -223,6 +237,12 @@ try
     {
         throw "Installing $CloudbaseInitMsiPath failed. Log: $CloudbaseInitMsiLog"
     }
+
+    iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
+    choco install --confirm git
+    RefreshEnv.cmd
+    choco install --confirm python2
+    RefreshEnv.cmd
 
     $Host.UI.RawUI.WindowTitle = "Running SetSetupComplete..."
     & "$programFilesDir\Cloudbase Solutions\Cloudbase-Init\bin\SetSetupComplete.cmd"
