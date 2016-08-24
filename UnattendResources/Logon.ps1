@@ -239,9 +239,13 @@ try
     }
 
     iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
-    choco install --confirm git
+    #choco install --confirm git
+    choco install git -y -o -ia "'/qn /norestart ALLUSERS=1 TARGETDIR=C:\Program Files (x86)\Git'"
     RefreshEnv.cmd
-    choco install --confirm python2
+    choco install -y openssl.light
+    RefreshEnv.cmd
+    #choco install --confirm python2
+    choco install python2 -y -o -ia "'/qn /norestart ALLUSERS=1 TARGETDIR=C:\Python27'"
     RefreshEnv.cmd
 
     $Host.UI.RawUI.WindowTitle = "Running SetSetupComplete..."
