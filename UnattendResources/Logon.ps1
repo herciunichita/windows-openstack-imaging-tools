@@ -239,8 +239,8 @@ try
     }
 
     iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
-    #choco install --confirm git
-    choco install git -y -o -ia "'/qn /norestart ALLUSERS=1 TARGETDIR=C:\Git'"
+    choco install --confirm git
+    #choco install git -y -o -ia "'/qn /norestart ALLUSERS=1 TARGETDIR=C:\Git'"
     RefreshEnv.cmd
     choco install -y openssl.light
     RefreshEnv.cmd
