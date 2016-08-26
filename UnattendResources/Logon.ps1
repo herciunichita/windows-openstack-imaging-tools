@@ -240,13 +240,15 @@ try
 
     iex ((new-object net.webclient).DownloadString('https://chocolatey.org/install.ps1'))
     #choco install --confirm git
-    choco install git -y -o -ia "'/qn /norestart ALLUSERS=1 TARGETDIR=C:\Program Files (x86)\Git'"
+    choco install git -y -o -ia "'/qn /norestart ALLUSERS=1 TARGETDIR=C:\Git'"
     RefreshEnv.cmd
     choco install -y openssl.light
     RefreshEnv.cmd
     #choco install --confirm python2
     choco install python2 -y -o -ia "'/qn /norestart ALLUSERS=1 TARGETDIR=C:\Python27'"
     RefreshEnv.cmd
+
+    $env:Path += ';C:\Python27;C:\Python27\Scripts;C:\Program Files\OpenSSL\bin;C:\Git\cmd;C:\Git\bin'; setx PATH $env:Path 
 
     $Host.UI.RawUI.WindowTitle = "Running SetSetupComplete..."
     & "$programFilesDir\Cloudbase Solutions\Cloudbase-Init\bin\SetSetupComplete.cmd"
